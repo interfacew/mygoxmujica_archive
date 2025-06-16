@@ -77,6 +77,14 @@ git push origin feature/your-feature
 
 - 提交pull request。我们会在您提交的pull request中进行评审和讨论
 
+**下载** **Download**
+
+文件较多，可以使用GitZip，选择单个文件夹下载。
+
+[GitZip](https://gitzip.org/)
+
+[FastGit](https://fastgit.org/)
+
 ## 参与讨论
 
 
