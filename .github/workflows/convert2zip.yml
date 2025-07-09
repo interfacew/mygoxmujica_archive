@@ -56,8 +56,11 @@ jobs:
                     esac
 
                      if [ $status -ne 0 ]; then
+                      echo "::error file=$file:: 原始文件解压失败，跳过"
+                      echo "::group::错误日志"
                       cat "$tempDir/../log.txt"
-                      echo "原始文件解压失败，跳过文件 $file"
+                      echo "::endgroup::"
+
                       rm -rf "$tempDir" "$tempDir/../log.txt"
                       echo "CONVERT_FAILED=1" >> $GITHUB_ENV
                       continue
@@ -66,8 +69,11 @@ jobs:
                     echo "创建ZIP文件..."
                     (cd "$tempDir" && zip -ry "../temp.zip" . > "$tempDir/../log.txt" 2>&1)
                     if [ $? -ne 0 ]; then
+                      echo "::error file=$file:: 压缩包创建失败，跳过"
+                      echo "::group::错误日志"
                       cat "$tempDir/../log.txt"
-                      echo "压缩包创建失败，跳过文件 $file"
+                      echo "::endgroup::"
+
                       rm -rf "$tempDir" "$tempDir/../temp.zip" "$tempDir/../log.txt"
                       echo "CONVERT_FAILED=1" >> $GITHUB_ENV
                       continue
@@ -77,8 +83,11 @@ jobs:
                     echo "验证ZIP文件..."
                     unzip -q "$tempDir/../temp.zip" -d "$valiDir" > "$tempDir/../log.txt" 2>&1
                     if [ $? -ne 0 ]; then
+                      echo "::error file=$file:: ZIP解压失败，跳过"
+                      echo "::group::错误日志"
                       cat "$tempDir/../log.txt"
-                      echo "ZIP解压失败，跳过文件 $file"
+                      echo "::endgroup::"
+                      
                       rm -rf "$tempDir" "$tempDir/../temp.zip" "$valiDir" "$tempDir/../log.txt"
                       echo "CONVERT_FAILED=1" >> $GITHUB_ENV
                       continue
@@ -89,7 +98,7 @@ jobs:
                     (cd "$valiDir" && find . -type f -print0 | xargs -0 md5sum | sort) > "$compDir/check.md5"
                     diff -q "$compDir/origin.md5" "$compDir/check.md5" > /dev/null
                     if [ $? -ne 0 ]; then
-                      echo "验证失败，跳过文件 $file"
+                      echo "::error file=$file:: 验证失败，跳过"
                       rm -rf "$tempDir" "$tempDir/../temp.zip" "$valiDir" "$compDir" "$tempDir/../log.txt"
                       echo "CONVERT_FAILED=1" >> $GITHUB_ENV
                     else
