@@ -1,4 +1,4 @@
-name: Convert other compressed file formats to ZIP
+name: Convert other Compressed Files formats to ZIP
 on: [push]
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
                     echo "处理文件: $file"
                     dir=$(dirname "$file")
                     base=$(basename "$file")
-                    name=$(echo "$base" | sed -E 's/\.(tar|tar\.gz|tgz|tar\.bz2|tbz2|tar\.xz|txz|rar|7z)$//i)
+                    name=$(echo "$base" | sed -E 's/\.(tar|tar\.gz|tgz|tar\.bz2|tbz2|tar\.xz|txz|rar|7z)$//i')
                     tempDir=$(mktemp -d)
                     
                     echo "解压原始文件..."
